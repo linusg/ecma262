@@ -35563,7 +35563,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Let _n_ be the CapturingGroupNumber of |DecimalEscape|.
           1. Assert: _n_ &le; _NcapturingParens_.
-          1. Return BackreferenceMatcher(_n_, _direction_).
+          1. Return BackreferenceMatcher(&laquo; _n_ &raquo;, _direction_).
         </emu-alg>
         <emu-note>
           <p>An escape sequence of the form `\\` followed by a non-zero decimal number _n_ matches the result of the _n_<sup>th</sup> set of capturing parentheses (<emu-xref href="#sec-notation"></emu-xref>). It is an error if the regular expression has fewer than _n_ capturing parentheses. If the regular expression has _n_ or more capturing parentheses but the _n_<sup>th</sup> one is *undefined* because it has not captured anything, then the backreference always succeeds.</p>
@@ -35582,10 +35582,12 @@ THH:mm:ss.sss
         </emu-alg>
         <emu-grammar>AtomEscape :: `k` GroupName</emu-grammar>
         <emu-alg>
-          1. Search the enclosing |Pattern| for an instance of a |GroupSpecifier| containing a |RegExpIdentifierName| which has a CapturingGroupName equal to the CapturingGroupName of the |RegExpIdentifierName| contained in |GroupName|, and such that CanBothParticipate(|AtomEscape|, |GroupSpecifier|) is *true*.
-          1. Assert: A unique such |GroupSpecifier| is found.
-          1. Let _parenIndex_ be the number of left-capturing parentheses in the entire regular expression that occur to the left of the located |GroupSpecifier|. This is the total number of <emu-grammar>Atom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> Parse Nodes prior to or enclosing the located |GroupSpecifier|, including its immediately enclosing |Atom|.
-          1. Return BackreferenceMatcher(_parenIndex_, _direction_).
+          1. Search the enclosing |Pattern| for all instances of a |GroupSpecifier| containing a |RegExpIdentifierName| which has a CapturingGroupName equal to the CapturingGroupName of the |RegExpIdentifierName| contained in |GroupName|, and such that CanBothParticipate(|AtomEscape|, |GroupSpecifier|) is *true*.
+          1. Let _parenIndices_ be a new empty List.
+          1. For each |GroupSpecifier| found above, do
+            1. Let _parenIndex_ be the number of left-capturing parentheses in the entire regular expression that occur to the left of the |GroupSpecifier|. This is the total number of <emu-grammar>Atom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> Parse Nodes prior to or enclosing the located |GroupSpecifier|, including its immediately enclosing |Atom|.
+            1. Append _parenIndex_ to _parenIndices_.
+          1. Return BackreferenceMatcher(_parenIndices_, _direction_).
         </emu-alg>
 
         <emu-clause id="sec-runtime-semantics-charactersetmatcher-abstract-operation" type="abstract operation">
@@ -35621,19 +35623,22 @@ THH:mm:ss.sss
         <emu-clause id="sec-backreference-matcher" type="abstract operation">
           <h1>
             BackreferenceMatcher (
-              _n_: a positive integer,
+              _ns_: a List of positive integers,
               _direction_: ~forward~ or ~backward~,
             ): a Matcher
           </h1>
           <dl class="header">
           </dl>
           <emu-alg>
-            1. Assert: _n_ &ge; 1.
-            1. Return a new Matcher with parameters (_x_, _c_) that captures _n_ and _direction_ and performs the following steps when called:
+            1. Return a new Matcher with parameters (_x_, _c_) that captures _ns_ and _direction_ and performs the following steps when called:
               1. Assert: _x_ is a State.
               1. Assert: _c_ is a Continuation.
               1. Let _cap_ be _x_'s _captures_ List.
-              1. Let _r_ be _cap_[_n_].
+              1. Let _r_ be *undefined*.
+              1. For each integer _n_ of _ns_, do
+                1. If _cap_[_n_] is not *undefined*, then
+                  1. Assert: _r_ is *undefined*.
+                  1. Set _r_ to _cap_[_n_].
               1. If _r_ is *undefined*, return _c_(_x_).
               1. Let _e_ be _x_'s _endIndex_.
               1. Let _rs_ be _r_'s _startIndex_.
