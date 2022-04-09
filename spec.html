@@ -46953,7 +46953,7 @@ THH:mm:ss.sss
           `\` AtomEscape[~UnicodeMode, ?N]
           `\` [lookahead == `c`]
           CharacterClass[~UnicodeMode]
-          `(` Disjunction[~UnicodeMode, ?N] `)`
+          `(` GroupSpecifier Disjunction[~UnicodeMode, ?N] `)`
           `(` `?` `:` Disjunction[~UnicodeMode, ?N] `)`
           InvalidBracedQuantifier
           ExtendedPatternCharacter
@@ -47076,7 +47076,7 @@ THH:mm:ss.sss
       <emu-annex id="sec-compilesubpattern-annexb" oldids="sec-regular-expression-patterns-semantics">
         <h1>Runtime Semantics: CompileSubpattern</h1>
         <p>The semantics of CompileSubpattern is extended as follows:</p>
-        <p>Within the rule for <emu-grammar>Term :: Atom Quantifier</emu-grammar>, references to &ldquo;<emu-grammar>Atom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> &rdquo; are to be interpreted as meaning &ldquo;<emu-grammar>Atom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> &rdquo; or &ldquo;<emu-grammar>ExtendedAtom :: `(` Disjunction `)`</emu-grammar> &rdquo;.</p>
+        <p>Within the rule for <emu-grammar>Term :: Atom Quantifier</emu-grammar>, references to &ldquo;<emu-grammar>Atom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> &rdquo; are to be interpreted as meaning &ldquo;<emu-grammar>Atom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> &rdquo; or &ldquo;<emu-grammar>ExtendedAtom :: `(` GroupSpecifier Disjunction `)`</emu-grammar> &rdquo;.</p>
 
         <p>The rule for <emu-grammar>Term :: QuantifiableAssertion Quantifier</emu-grammar> is the same as for <emu-grammar>Term :: Atom Quantifier</emu-grammar> but with |QuantifiableAssertion| substituted for |Atom|.</p>
         <p>The rule for <emu-grammar>Term :: ExtendedAtom Quantifier</emu-grammar> is the same as for <emu-grammar>Term :: Atom Quantifier</emu-grammar> but with |ExtendedAtom| substituted for |Atom|.</p>
